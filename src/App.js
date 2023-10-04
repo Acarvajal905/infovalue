@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import './App.css';
-import axios from 'axios';
+import React, { Component } from "react";
+import "./App.css";
+import axios from "axios";
 
 export default class App extends Component {
-
   constructor(props) {
     super(props);
 
@@ -13,128 +12,122 @@ export default class App extends Component {
       firstphoto: null,
       error: "",
       loading: "",
-      request: false
+      request: false,
     };
   }
 
   handleroverselector = (event) => {
     this.setState({
       rover: event.target.value,
-      camera: ""
+      camera: "",
     });
-  }
-
+  };
 
   handlecameraselection = (event) => {
     this.setState({ camera: event.target.value });
-  }
-
+  };
 
   handleSubmit = (event) => {
-
     this.setState({
       loading: "Loading...",
     });
 
-
     let url = `https://api.nasa.gov/mars-photos/api/v1/rovers/${this.state.rover}/photos?sol=100&camera=${this.state.camera}&api_key=Tv6gAKvEQVPyIf0KwDIHRQXRuJ17XQYIEETD2e35`;
 
-    axios.get(url)
-      .then((res) => {
-        if (res.data.Error) {
-          this.setState({
-            error: res.errors
-          });
-        } else {
-          let photo = "";
-          for (let i = 0; i < res.data.photos.length; i++) {
-            console.log(i)
-            if (!!res.data.photos[i]) {
-              photo = res.data.photos[i].img_src;
-              console.log(photo)
-            } else {
-              photo = null;
-            }
+    axios.get(url).then((res) => {
+      if (res.data.Error) {
+        this.setState({
+          error: res.errors,
+        });
+      } else {
+        let photo = "";
+        for (let i = 0; i < res.data.photos.length; i++) {
+          console.log(i);
+          if (!!res.data.photos[i]) {
+            photo = res.data.photos[i].img_src;
+            console.log(photo);
+          } else {
+            photo = null;
           }
-
-          this.setState({
-            firstphoto: photo,
-            loading: "",
-            request: true
-          });
         }
-      });
-  }
+
+        this.setState({
+          firstphoto: photo,
+          loading: "",
+          request: true,
+        });
+      }
+    });
+  };
 
   renderPhoto() {
-
-    return <img className='images' alt="No images found" src={this.state.firstphoto} />;
-
+    return (
+      <img
+        className="images"
+        alt="No images found"
+        src={this.state.firstphoto}
+      />
+    );
   }
 
-
   render() {
-
     let roverCameras = {
-      "spirit": [
+      spirit: [
         {
           Abbreviation: "FHAZ",
-          Camera: "Front Hazard Avoidance Camera"
+          Camera: "Front Hazard Avoidance Camera",
         },
         {
           Abbreviation: "RHAZ",
-          Camera: "Rear Hazard Avoidance Camera"
+          Camera: "Rear Hazard Avoidance Camera",
         },
         {
           Abbreviation: "NAVCAM",
-          Camera: "Navigation Camera"
+          Camera: "Navigation Camera",
         },
         {
           Abbreviation: "PANCAM",
-          Camera: "Panoramic Camera"
-        }
+          Camera: "Panoramic Camera",
+        },
       ],
-      "curiosity": [
+      curiosity: [
         {
           Abbreviation: "FHAZ",
-          Camera: "Front Hazard Avoidance Camera"
+          Camera: "Front Hazard Avoidance Camera",
         },
         {
           Abbreviation: "RHAZ",
-          Camera: "Rear Hazard Avoidance Camera"
+          Camera: "Rear Hazard Avoidance Camera",
         },
         {
           Abbreviation: "MAST",
-          Camera: "Mast Camera"
+          Camera: "Mast Camera",
         },
         {
           Abbreviation: "CHEMCAM",
-          Camera: "Chemistry and Camera Complex"
+          Camera: "Chemistry and Camera Complex",
         },
         {
           Abbreviation: "NAVCAM",
-          Camera: "Navigation Camera"
+          Camera: "Navigation Camera",
         },
       ],
-      "opportunity": [
+      opportunity: [
         {
           Abbreviation: "NAVCAM",
-          Camera: "Navigation Camera"
+          Camera: "Navigation Camera",
         },
         {
           Abbreviation: "PANCAM",
-          Camera: "Panoramic Camera"
-        }
-      ]
-
-
-    }
+          Camera: "Panoramic Camera",
+        },
+      ],
+    };
 
     let photos = {
-      name: 'name',
-      img_src: 'img_src'
-    }
-
+      name: "name",
+      img_src: "img_src",
+    };
 
     return (
       <div className="App">
@@ -142,39 +135,71 @@ export default class App extends Component {
           <h1 class="display-4">Infovalue Challenge</h1>
         </div>
         <div>
-          <label className="texts">Rovers:
-          <br />
-            <select class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value={this.state.rover} onChange={this.handleroverselector}>
-              <option class="dropdown-item" value="curiosity">Curiosity</option>
-              <option class="dropdown-item" value="spirit">Spirit</option>
-              <option class="dropdown-item" value="opportunity">Opportunity</option>
+          <label className="texts">
+            Rovers:
+            <br />
+            <select
+              class="btn btn-secondary dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              value={this.state.rover}
+              onChange={this.handleroverselector}
+            >
+              <option class="dropdown-item" value="curiosity">
+                Curiosity
+              </option>
+              <option class="dropdown-item" value="spirit">
+                Spirit
+              </option>
+              <option class="dropdown-item" value="opportunity">
+                Opportunity
+              </option>
             </select>
           </label>
         </div>
 
-        <br /><br />
+        <br />
+        <br />
 
-        <label className="texts">Cameras:
+        <label className="texts">
+          Cameras:
           <br />
-          <select class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value={this.state.camera} onChange={this.handlecameraselection}>
-            <option class="dropdown-item" value={''}>Select one</option>
-            {roverCameras[this.state.rover].map((selectedcamera) =>
-              <option key={selectedcamera.Abbreviation} value={selectedcamera.Abbreviation}>{selectedcamera.Camera}</option>
-            )}
+          <select
+            class="btn btn-secondary dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            value={this.state.camera}
+            onChange={this.handlecameraselection}
+          >
+            <option class="dropdown-item" value={""}>
+              Select one
+            </option>
+            {roverCameras[this.state.rover].map((selectedcamera) => (
+              <option
+                key={selectedcamera.Abbreviation}
+                value={selectedcamera.Abbreviation}
+              >
+                {selectedcamera.Camera}
+              </option>
+            ))}
           </select>
         </label>
 
-        <br /><br />
+        <br />
+        <br />
 
-        <button class="btn btn-secondary" onClick={this.handleSubmit}>Search</button>
+        <button class="btn btn-secondary" onClick={this.handleSubmit}>
+          Search
+        </button>
 
-        <br /><br />
+        <br />
+        <br />
 
         <p>{this.state.loading}</p>
 
         {this.renderPhoto()}
-
-
       </div>
     );
   }
